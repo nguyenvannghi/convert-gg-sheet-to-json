@@ -1,0 +1,42 @@
+{
+    "name": "app-convert-google-sheet-to-json",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "dev": "nodemon --delay 1.5 index.js && livereload",
+        "restart": "kill-port 5002 && nodemon --delay 1.5 index.js && livereload",
+        "start": "node index.js"
+    },
+    "devDependencies": {
+        "express-reload": "^1.2.0",
+        "husky": "^3.1.0",
+        "kill-port": "^1.6.0",
+        "lint-staged": "^9.5.0",
+        "nodemon": "^2.0.1",
+        "prettier": "^1.19.1"
+    },
+    "prettier": {
+        "singleQuote": true,
+        "trailingComma": "all",
+        "bracketSpacing": true,
+        "jsxBracketSameLine": true,
+        "tabWidth": 4,
+        "printWidth": 140
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js,css,json,md}": [
+            "prettier --write",
+            "git add"
+        ]
+    },
+    "dependencies": {
+        "google-spreadsheet": "^2.0.8",
+        "googleapis": "39"
+    }
+}
