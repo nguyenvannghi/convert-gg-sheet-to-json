@@ -14,7 +14,7 @@ if (myArgs.length === 0) {
     console.log('\n');
     console.log('\t 😨  Missing parameters in the process');
     console.log('\t 👉  yarn start sheetId=[GG_SHEET_ID] [parameter(1)] [parameter(2)] [parameter(n+)]');
-    console.log('\t 🙏  Example: yarn start sheetId=1HOFI0ldw2TSkllzScZPVR5XsPI3BxoRZDwVkkET-HBE valuevietnamese valueeng');
+    console.log('\t 🙏  Example: yarn start sheetId=1HOFI0ldw2TSkllzScZPVR5XsPI3BxoRZDwVkkET-HBE vi en-US');
     console.log('\n');
     return;
 }
@@ -31,7 +31,7 @@ if (sheetId === '') {
     console.log('\n');
     console.log('\t 😨  Missing sheetId in the process');
     console.log('\t 👉  yarn start sheetId=[GG_SHEET_ID] [parameter(1)] [parameter(2)] [parameter(n+)]');
-    console.log('\t 🙏  Example: yarn start sheetId=1HOFI0ldw2TSkllzScZPVR5XsPI3BxoRZDwVkkET-HBE valuevietnamese valueeng');
+    console.log('\t 🙏  Example: yarn start sheetId=1HOFI0ldw2TSkllzScZPVR5XsPI3BxoRZDwVkkET-HBE vi en-US');
     console.log('\n');
     return;
 }
@@ -40,7 +40,7 @@ if (parameters.length === 0) {
     console.log('\n');
     console.log('\t 😨  Missing column gg sheet in the process');
     console.log('\t 👉  yarn start sheetId=[GG_SHEET_ID] [parameter(1)] [parameter(2)] [parameter(n+)]');
-    console.log('\t 🙏  Example: yarn start sheetId=1HOFI0ldw2TSkllzScZPVR5XsPI3BxoRZDwVkkET-HBE valuevietnamese valueeng');
+    console.log('\t 🙏  Example: yarn start sheetId=1HOFI0ldw2TSkllzScZPVR5XsPI3BxoRZDwVkkET-HBE vi en-US');
     console.log('\n');
     return;
 }
@@ -56,12 +56,13 @@ doc.useServiceAccountAuth(creds, function(err) {
             parameters.forEach(arg => (json = Object.assign(json, { [arg]: {} })));
             for (var i = 0; i < rows.length; i++) {
                 const rowItems = rows[i];
-
                 parameters.forEach(arg => {
-                    const cellIndex = Object.keys(rowItems).findIndex(t => t === arg);
+                    const cellIndex = Object.keys(rowItems).findIndex(t => t === arg.toLowerCase());
                     const cell = Object.keys(rowItems)[cellIndex];
-                    if (arg === cell) {
-                        json[arg] = Object.assign(json[arg], { [rows[i].key]: rows[i][arg] });
+                    if (arg.toLowerCase() === cell) {
+                        json[arg] = Object.assign(json[arg], {
+                            [rows[i].key]: rows[i][arg.toLowerCase()] ? rows[i][arg.toLowerCase()] : '',
+                        });
                     }
                 });
             }
