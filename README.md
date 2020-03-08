@@ -28,3 +28,4 @@ This is a 2-legged oauth method and designed to be "an account that belongs to y
 - [parameter]: column on gg sheet
 - Your JSON key file is generated and downloaded to your machine (it is the only copy!)
 - Note your service account's email address (also available in the JSON key file)
+6. GG sheet demo in source code.
