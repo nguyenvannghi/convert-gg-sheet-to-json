@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-const GoogleSpreadsheet = require('google-spreadsheet');
+const uuid = require('uuid');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { afterString } = require('./helper');
 const creds = require('./key.json');
 
@@ -46,30 +47,34 @@ if (parameters.length === 0) {
 }
 
 const doc = new GoogleSpreadsheet(sheetId);
+async function ggSheetFunc() {
+    await doc.useServiceAccountAuth(creds);
+    await doc.loadInfo();
+    const sheet = doc.sheetsByIndex[0];
+    const rows = await sheet.getRows();
+    return { title: sheet.title, rows };
+}
 
-doc.useServiceAccountAuth(creds, function(err) {
-    doc.getRows(1, function(err, rows) {
-        if (err) {
-            console.log(err);
-        } else {
-            let json = {};
-            parameters.forEach(arg => (json = Object.assign(json, { [arg]: {} })));
-            for (var i = 0; i < rows.length; i++) {
-                const rowItems = rows[i];
-                parameters.forEach(arg => {
-                    const cellIndex = Object.keys(rowItems).findIndex(t => t === arg.toLowerCase());
-                    const cell = Object.keys(rowItems)[cellIndex];
-                    if (arg.toLowerCase() === cell) {
-                        json[arg] = Object.assign(json[arg], {
-                            [rows[i].key]: rows[i][arg.toLowerCase()] ? rows[i][arg.toLowerCase()] : '',
-                        });
-                    }
-                });
-            }
-            fs.writeFileSync(path.resolve(__dirname, './lang.json'), JSON.stringify(json));
-            console.log('\n');
-            console.log('\t 🚀  Generated sheet.json');
-            console.log('\n');
-        }
-    });
+ggSheetFunc().then(({ title, rows }) => {
+    let json = {};
+    parameters.forEach(arg => (json = Object.assign(json, { [arg]: {} })));
+
+    for (var i = 0; i < rows.length; i++) {
+        const rowItems = rows[i];
+        parameters.forEach(arg => {
+            const cellIndex = Object.keys(rowItems).findIndex(t => t.toLowerCase() === arg.toLowerCase());
+            const cell = Object.keys(rowItems)[cellIndex];
+            json[arg] = Object.assign(json[arg], {
+                [rows[i].Key]: rows[i][cell] ? rows[i][cell] : '',
+            });
+        });
+    }
+    const dir = './converted/';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+    fs.writeFileSync(path.resolve(__dirname, `./converted/${title}_${uuid.v4()}.json`), JSON.stringify(json));
+    console.log('\n');
+    console.log('\t 🚀  Generated sheet.json');
+    console.log('\n');
 });

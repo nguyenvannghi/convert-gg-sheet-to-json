@@ -10,10 +10,10 @@
     },
     "devDependencies": {
         "express-reload": "^1.2.0",
-        "husky": "^3.1.0",
+        "husky": "^4.2.3",
         "kill-port": "^1.6.0",
-        "lint-staged": "^9.5.0",
-        "nodemon": "^2.0.1",
+        "lint-staged": "^10.0.8",
+        "nodemon": "^2.0.2",
         "prettier": "^1.19.1"
     },
     "prettier": {
@@ -36,7 +36,8 @@
         ]
     },
     "dependencies": {
-        "google-spreadsheet": "^2.0.8",
-        "googleapis": "39"
+        "google-spreadsheet": "^3.0.9",
+        "googleapis": "48.0.0",
+        "uuid": "^7.0.2"
     }
 }
